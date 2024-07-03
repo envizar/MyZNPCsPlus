@@ -20,7 +20,7 @@ public class NpcPropertyRegistryProvider {
      */
     public static EntityPropertyRegistry get() {
         if (registry == null) throw new IllegalStateException(
-                "ZNPCsPlus plugin isn't enabled yet!\n" +
+                "ZNPCsPlus plugin isn't loaded yet!\n" +
                         "Please add it to your plugin.yml as a depend or softdepend."
         );
         return registry;
