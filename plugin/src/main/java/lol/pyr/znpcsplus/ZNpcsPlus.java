@@ -14,6 +14,7 @@ import lol.pyr.director.adventure.parse.primitive.FloatParser;
 import lol.pyr.director.adventure.parse.primitive.IntegerParser;
 import lol.pyr.director.common.message.Message;
 import lol.pyr.znpcsplus.api.NpcApiProvider;
+import lol.pyr.znpcsplus.api.NpcPropertyRegistryProvider;
 import lol.pyr.znpcsplus.api.interaction.InteractionType;
 import lol.pyr.znpcsplus.commands.*;
 import lol.pyr.znpcsplus.commands.action.*;
@@ -78,12 +79,23 @@ public class ZNpcsPlus {
     private final PacketEventsAPI<Plugin> packetEvents;
     private final ZNpcsPlusBootstrap bootstrap;
 
+    private final ConfigManager configManager;
+    private final MojangSkinCache skinCache;
+    private final EntityPropertyRegistryImpl propertyRegistry;
+
     public ZNpcsPlus(ZNpcsPlusBootstrap bootstrap) {
         this.bootstrap = bootstrap;
         packetEvents = SpigotPacketEventsBuilder.build(bootstrap);
         PacketEvents.setAPI(packetEvents);
         packetEvents.getSettings().checkForUpdates(false);
         packetEvents.load();
+
+        configManager = new ConfigManager(getDataFolder());
+        skinCache = new MojangSkinCache(configManager);
+        propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
+
+        NpcPropertyRegistryProvider.register(propertyRegistry);
+        shutdownTasks.add(NpcPropertyRegistryProvider::unregister);
     }
 
     private void log(String str) {
@@ -113,9 +125,7 @@ public class ZNpcsPlus {
         TaskScheduler scheduler = FoliaUtil.isFolia() ? new FoliaScheduler(bootstrap) : new SpigotScheduler(bootstrap);
         shutdownTasks.add(scheduler::cancelAll);
 
-        ConfigManager configManager = new ConfigManager(getDataFolder());
-        MojangSkinCache skinCache = new MojangSkinCache(configManager);
-        EntityPropertyRegistryImpl propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
+
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
         propertyRegistry.registerTypes(bootstrap, packetFactory, textSerializer);
 
