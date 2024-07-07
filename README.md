@@ -5,7 +5,7 @@
 that players can interact with to perform actions like switching servers on a network or executing commands.
 
 This plugin is a remake of a plugin called ZNPCs, we originally started because the maintainer of ZNPCs decided to announce that he was 
-[dropping support for the plugin](../blob/master/.github/znpcs.png).
+[dropping support for the plugin](https://github.com/Pyrbu/ZNPCsPlus/blob/2.X/.github/znpc.png?raw=true).
 
 Looking for up-to-date builds of the plugin? Check out our [Jenkins](https://ci.pyr.lol/job/ZNPCsPlus/)
 
