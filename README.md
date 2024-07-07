@@ -5,7 +5,7 @@
 that players can interact with to perform actions like switching servers on a network or executing commands.
 
 This plugin is a remake of a plugin called ZNPCs, we originally started because the maintainer of ZNPCs decided to announce that he was 
-[dropping support for the plugin](https://media.discordapp.net/attachments/1093914615873806477/1098409384855474237/znpc.png).
+[dropping support for the plugin](../blob/master/.github/znpcs.png).
 
 Looking for up-to-date builds of the plugin? Check out our [Jenkins](https://ci.pyr.lol/job/ZNPCsPlus/)
 
@@ -19,7 +19,7 @@ Looking for up-to-date builds of the plugin? Check out our [Jenkins](https://ci.
 ### Requirements, Extensions & Supported Software
 Requirements:
 - Java 8+
-- Minecraft 1.8 - 1.20.4
+- Minecraft 1.8 - 1.21
 
 Supported Softwares:
 - Spigot ([Website](https://www.spigotmc.org/))
