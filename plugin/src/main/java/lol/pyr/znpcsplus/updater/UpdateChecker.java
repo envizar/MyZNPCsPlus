@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class UpdateChecker extends BukkitRunnable {
     private final static Logger logger = Logger.getLogger("ZNPCsPlus Update Checker");
-    private static final String GET_RESOURCE = "https://api.spigotmc.org/simple/0.2/index.php?action=getResource&id=109380";
+    private final static String GET_RESOURCE = "https://api.spigotmc.org/simple/0.2/index.php?action=getResource&id=109380";
     public final static String DOWNLOAD_LINK = "https://www.spigotmc.org/resources/znpcsplus.109380/";
 
     private final PluginDescriptionFile info;
