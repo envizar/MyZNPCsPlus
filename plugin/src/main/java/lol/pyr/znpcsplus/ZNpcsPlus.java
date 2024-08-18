@@ -127,7 +127,7 @@ public class ZNpcsPlus {
 
 
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
-        propertyRegistry.registerTypes(bootstrap, packetFactory, textSerializer);
+        propertyRegistry.registerTypes(bootstrap, packetFactory, textSerializer, scheduler);
 
         BungeeConnector bungeeConnector = new BungeeConnector(bootstrap);
         ActionRegistryImpl actionRegistry = new ActionRegistryImpl();
