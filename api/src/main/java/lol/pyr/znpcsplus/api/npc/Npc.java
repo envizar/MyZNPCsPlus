@@ -39,6 +39,18 @@ public interface Npc extends PropertyHolder {
     void setLocation(NpcLocation location);
 
     /**
+     * Sets the world of this NPC
+     * @param world The bukkit world to set
+     */
+    void setWorld(World world);
+
+    /**
+     * Sets the world of this NPC
+     * @param name The name world to set
+     */
+    void setWorld(String name);
+
+    /**
      * Gets the hologram of this NPC
      * @return The {@link Hologram} of this NPC
      */

@@ -236,6 +236,11 @@ public class NpcImpl extends Viewable implements Npc {
         this.worldName = world.getName();
     }
 
+    public void setWorld(String name) {
+        delete();
+        this.worldName = name;
+    }
+
     public void swingHand(boolean offHand) {
         for (Player viewer : getViewers()) entity.swingHand(viewer, offHand);
     }
