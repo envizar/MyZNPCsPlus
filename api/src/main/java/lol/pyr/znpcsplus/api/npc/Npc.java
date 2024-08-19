@@ -82,6 +82,13 @@ public interface Npc extends PropertyHolder {
     World getWorld();
 
     /**
+     * Gets the name of the world this NPC is in
+     * Unlike {@link Npc#getWorld()} this will never be null
+     * @return The name of the world this NPC is in
+     */
+    String getWorldName();
+
+    /**
      * Gets the list of actions for this NPC
      * @return The {@link List} of {@link InteractionAction}s for this NPC
      */
