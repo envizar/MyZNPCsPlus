@@ -8,7 +8,7 @@ runServer {
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(21)
     }
-    minecraftVersion "1.21"
+    minecraftVersion "1.21.1"
 }
 
 processResources {
@@ -37,11 +37,10 @@ shadowJar {
     relocate "org.objectweb.asm", "lol.pyr.znpcsplus.libraries.asm"
     relocate "me.lucko.jarrelocator", "lol.pyr.znpcsplus.libraries.jarrelocator"
 
-    // When changing anything here remember to also update the bootstrap
     relocate "org.bstats", "lol.pyr.znpcsplus.libraries.bstats"
     relocate "net.kyori", "lol.pyr.znpcsplus.libraries.kyori"
     relocate "org.checkerframework", "lol.pyr.znpcsplus.libraries.checkerframework"
-    relocate "com.google", "lol.pyr.znpcsplus.libraries.google"
+    relocate "com.google.gson", "lol.pyr.znpcsplus.libraries.gson"
     relocate "com.github.retrooper.packetevents", "lol.pyr.znpcsplus.libraries.packetevents.api"
     relocate "io.github.retrooper.packetevents", "lol.pyr.znpcsplus.libraries.packetevents.impl"
     relocate "org.yaml.snakeyaml", "lol.pyr.znpcsplus.libraries.snakeyaml"
