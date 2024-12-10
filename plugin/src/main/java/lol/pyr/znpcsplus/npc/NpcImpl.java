@@ -86,6 +86,10 @@ public class NpcImpl extends Viewable implements Npc {
     public void setLocation(NpcLocation location) {
         this.location = location;
         entity.setLocation(location, getViewers());
+        if (entity.hasMetadata("ridingVehicle")) {
+            PacketEntity armorStand = (PacketEntity) entity.getMetadata("ridingVehicle");
+            armorStand.setLocation(location.withY(location.getY() - 0.9), getViewers());
+        }
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 

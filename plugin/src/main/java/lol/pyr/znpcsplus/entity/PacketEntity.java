@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import lol.pyr.znpcsplus.ZNpcsPlusBootstrap;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +27,8 @@ public class PacketEntity implements PropertyHolder {
 
     private final EntityType type;
     private NpcLocation location;
+
+    private final HashMap<String, Object> metadata = new HashMap<>();
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
@@ -67,6 +71,15 @@ public class PacketEntity implements PropertyHolder {
 
     public void despawn(Player player) {
         packetFactory.destroyEntity(player, this, properties);
+        if (hasMetadata("ridingVehicle")) {
+            try {
+                PacketEntity armorStand = (PacketEntity) getMetadata("ridingVehicle");
+                armorStand.despawn(player);
+            } catch (Exception e) {
+                //noinspection CallToPrintStackTrace
+                e.printStackTrace();
+            }
+        }
     }
 
     public void refreshMeta(Player player) {
@@ -115,5 +128,33 @@ public class PacketEntity implements PropertyHolder {
     @Override
     public Set<EntityProperty<?>> getAppliedProperties() {
         return properties.getAppliedProperties();
+    }
+
+    public void setMetadata(String key, Object value) {
+        metadata.put(key, value);
+    }
+
+    public Object getMetadata(String key) {
+        return metadata.get(key);
+    }
+
+    public <T> T getMetadata(String key, Class<T> type) {
+        try {
+            return type.cast(metadata.get(key));
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
+
+    public void removeMetadata(String key) {
+        metadata.remove(key);
+    }
+
+    public boolean hasMetadata(String key) {
+        return metadata.containsKey(key);
+    }
+
+    public void clearMetadata() {
+        metadata.clear();
     }
 }

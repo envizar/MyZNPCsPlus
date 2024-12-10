@@ -182,6 +182,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("baby", babyIndex, false, legacyBooleans));
         }
 
+        register(new EntitySittingProperty(packetFactory, this));
+
         // Player
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));
         final int skinLayersIndex;
