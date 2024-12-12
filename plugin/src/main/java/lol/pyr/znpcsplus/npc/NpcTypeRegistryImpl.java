@@ -205,9 +205,6 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-0.025)
                 .addEquipmentProperties());
 
-        register(builder(p, "polar_bear", EntityTypes.POLAR_BEAR)
-                .setHologramOffset(-0.575));
-
         register(builder(p, "stray", EntityTypes.STRAY)
                 .setHologramOffset(0.015)
                 .addEquipmentProperties());
