@@ -667,6 +667,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         // Bogged
         register(new BooleanProperty("bogged_sheared", 16, false, legacyBooleans));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21_2)) return;
+
+        // Creaking
+        register(new BooleanProperty("creaking_active", 17, false, legacyBooleans));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21_4)) return;
+
+        // Creaking
+        register(new BooleanProperty("creaking_crumbling", 18, false, legacyBooleans));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

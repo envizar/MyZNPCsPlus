@@ -386,6 +386,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "breeze", EntityTypes.BREEZE)
                 .setHologramOffset(-0.205));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_21_2)) return;
+
+        register(builder(p, "creaking", EntityTypes.CREAKING)
+                .setHologramOffset(0.725)
+                .addProperties("creaking_active"));
     }
 
     public Collection<NpcType> getAll() {
