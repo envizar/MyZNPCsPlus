@@ -24,10 +24,12 @@ public class EntitySittingProperty extends EntityPropertyImpl<Boolean> {
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         boolean sitting = entity.getProperty(this);
-        if (sitting) if (entity.getVehicle() == null) {
-            PacketEntity vehiclePacketEntity = new PacketEntity(packetFactory, new ArmorStandVehicleProperties(propertyRegistry),
-                    entity.getViewable(), EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() - 0.9));
-            entity.setVehicle(vehiclePacketEntity);
+        if (sitting) {
+            if (entity.getVehicle() == null) {
+                PacketEntity vehiclePacketEntity = new PacketEntity(packetFactory, new ArmorStandVehicleProperties(propertyRegistry),
+                        entity.getViewable(), EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() - 0.9));
+                entity.setVehicle(vehiclePacketEntity);
+            }
         } else if (entity.getVehicle() != null) {
             entity.setVehicle(null);
         }
