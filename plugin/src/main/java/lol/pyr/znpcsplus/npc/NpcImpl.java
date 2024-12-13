@@ -48,14 +48,14 @@ public class NpcImpl extends Viewable implements Npc {
         this.type = type;
         this.location = location;
         this.uuid = uuid;
-        entity = new PacketEntity(packetFactory, this, type.getType(), location);
+        entity = new PacketEntity(packetFactory, this, this, type.getType(), location);
         hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
     }
 
     public void setType(NpcTypeImpl type) {
         UNSAFE_hideAll();
         this.type = type;
-        entity = new PacketEntity(packetFactory, this, type.getType(), entity.getLocation());
+        entity = new PacketEntity(packetFactory, this, this, type.getType(), entity.getLocation());
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
         UNSAFE_showAll();
     }
@@ -85,11 +85,7 @@ public class NpcImpl extends Viewable implements Npc {
 
     public void setLocation(NpcLocation location) {
         this.location = location;
-        entity.setLocation(location, getViewers());
-        if (entity.hasMetadata("ridingVehicle")) {
-            PacketEntity armorStand = (PacketEntity) entity.getMetadata("ridingVehicle");
-            armorStand.setLocation(location.withY(location.getY() - 0.9), getViewers());
-        }
+        entity.setLocation(location);
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 

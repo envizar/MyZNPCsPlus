@@ -16,14 +16,14 @@ import java.util.Set;
  *     This entity is used to make the NPC sit on an invisible armor stand.
  * </p>
  */
-public class ArmorStandVehicleEntity implements PropertyHolder {
+public class ArmorStandVehicleProperties implements PropertyHolder {
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
 
-    public ArmorStandVehicleEntity(EntityPropertyRegistryImpl propertyRegistry) {
-        setProperty(propertyRegistry.getByName("small", Boolean.class), true);
-        setProperty(propertyRegistry.getByName("invisible", Boolean.class), true);
-        setProperty(propertyRegistry.getByName("base_plate", Boolean.class), false);
+    public ArmorStandVehicleProperties(EntityPropertyRegistryImpl propertyRegistry) {
+        _setProperty(propertyRegistry.getByName("small", Boolean.class), true);
+        _setProperty(propertyRegistry.getByName("invisible", Boolean.class), true);
+        _setProperty(propertyRegistry.getByName("base_plate", Boolean.class), false);
     }
 
     @SuppressWarnings("unchecked")
@@ -37,12 +37,16 @@ public class ArmorStandVehicleEntity implements PropertyHolder {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public <T> void setProperty(EntityProperty<T> key, T value) {
+    private <T> void _setProperty(EntityProperty<T> key, T value) {
         Object val = value;
         if (val instanceof ItemStack) val = SpigotConversionUtil.fromBukkitItemStack((ItemStack) val);
 
         setProperty((EntityPropertyImpl<T>) key, (T) val);
+    }
+
+    @Override
+    public <T> void setProperty(EntityProperty<T> key, T value) {
+        throw new UnsupportedOperationException("Cannot set properties on armor stands");
     }
 
     @Override
