@@ -82,7 +82,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "enderman", EntityTypes.ENDERMAN)
                 .setHologramOffset(0.925)
-                .addProperties("enderman_held_block", "enderman_screaming", "enderman_staring"));
+                .addProperties("enderman_held_block", "enderman_screaming", "enderman_staring", "entity_sitting"));
 
         register(builder(p, "endermite", EntityTypes.ENDERMITE)
                 .setHologramOffset(-1.675));
@@ -93,7 +93,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "giant", EntityTypes.GIANT)
                 .setHologramOffset(10.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "guardian", EntityTypes.GUARDIAN)
                 .setHologramOffset(-1.125)
@@ -133,7 +134,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "skeleton", EntityTypes.SKELETON)
                 .setHologramOffset(0.015)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "skeleton_horse", EntityTypes.SKELETON_HORSE)
                 .setHologramOffset(-0.375));
@@ -169,14 +171,16 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "zombie", EntityTypes.ZOMBIE)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "zombie_horse", EntityTypes.ZOMBIE_HORSE)
                 .setHologramOffset(-0.375));
 
         register(builder(p, "zombified_piglin", EntityTypes.ZOMBIFIED_PIGLIN)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
 
@@ -203,14 +207,17 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "husk", EntityTypes.HUSK)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "stray", EntityTypes.STRAY)
                 .setHologramOffset(0.015)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "evoker", EntityTypes.EVOKER)
-                .setHologramOffset(-0.025));
+                .setHologramOffset(-0.025)
+                .addProperties("entity_sitting"));
 
         register(builder(p, "llama", EntityTypes.LLAMA)
                 .setHologramOffset(-0.105)
@@ -222,20 +229,23 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "vindicator", EntityTypes.VINDICATOR)
                 .setHologramOffset(-0.025)
-                .addProperties("celebrating"));
+                .addProperties("celebrating", "entity_sitting"));
 
         register(builder(p, "wither_skeleton", EntityTypes.WITHER_SKELETON)
                 .setHologramOffset(0.425)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         if (!version.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
 
         register(builder(p, "illusioner", EntityTypes.ILLUSIONER)
-                .setHologramOffset(-0.025));
+                .setHologramOffset(-0.025)
+                .addProperties("entity_sitting"));
 
         register(builder(p, "parrot", EntityTypes.PARROT)
                 .setHologramOffset(-1.075)
@@ -252,7 +262,8 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "drowned", EntityTypes.DROWNED)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "phantom", EntityTypes.PHANTOM)
                 .setHologramOffset(-1.475));
@@ -288,7 +299,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "pillager", EntityTypes.PILLAGER)
                 .setHologramOffset(-0.025)
                 .addHandProperties()
-                .addProperties("pillager_charging"));
+                .addProperties("pillager_charging", "entity_sitting"));
 
         register(builder(p, "ravager", EntityTypes.RAVAGER)
                 .setHologramOffset(0.225));
@@ -316,11 +327,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "piglin", EntityTypes.PIGLIN)
                 .setHologramOffset(-0.025)
                 .addEquipmentProperties()
-                .addProperties("piglin_baby", "piglin_charging_crossbow", "piglin_dancing"));
+                .addProperties("piglin_baby", "piglin_charging_crossbow", "piglin_dancing", "entity_sitting"));
 
         register(builder(p, "piglin_brute", EntityTypes.PIGLIN_BRUTE)
                 .setHologramOffset(-0.025)
-                .addEquipmentProperties());
+                .addEquipmentProperties()
+                .addProperties("entity_sitting"));
 
         register(builder(p, "strider", EntityTypes.STRIDER)
                 .setHologramOffset(-0.275)
@@ -379,7 +391,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "bogged", EntityTypes.BOGGED)
                 .setHologramOffset(0.015)
-                .addProperties("bogged_sheared"));
+                .addProperties("bogged_sheared", "entity_sitting"));
 
         register(builder(p, "breeze", EntityTypes.BREEZE)
                 .setHologramOffset(-0.205));
@@ -388,7 +400,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "creaking", EntityTypes.CREAKING)
                 .setHologramOffset(0.725)
-                .addProperties("creaking_active"));
+                .addProperties("creaking_active", "entity_sitting"));
     }
 
     public Collection<NpcType> getAll() {
