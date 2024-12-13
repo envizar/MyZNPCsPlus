@@ -400,7 +400,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "creaking", EntityTypes.CREAKING)
                 .setHologramOffset(0.725)
-                .addProperties("creaking_active", "entity_sitting"));
+                .addProperties("creaking_active"));
     }
 
     public Collection<NpcType> getAll() {
