@@ -15,13 +15,11 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
-import org.bukkit.entity.Player;
-
-import java.util.Collection;
+import lol.pyr.znpcsplus.util.Viewable;
 
 public class HologramItem extends HologramLine<ItemStack> {
-    public HologramItem(EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, ItemStack item) {
-        super(item, packetFactory, EntityTypes.ITEM, location);
+    public HologramItem(Viewable viewable,  EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, ItemStack item) {
+        super(viewable, item, packetFactory, EntityTypes.ITEM, location);
         addProperty(propertyRegistry.getByName("holo_item"));
     }
 
@@ -33,8 +31,8 @@ public class HologramItem extends HologramLine<ItemStack> {
     }
 
     @Override
-    public void setLocation(NpcLocation location, Collection<Player> viewers) {
-        super.setLocation(location.withY(location.getY() + 2.05), viewers);
+    public void setLocation(NpcLocation location) {
+        super.setLocation(location.withY(location.getY() + 2.05));
     }
 
     public static boolean ensureValidItemInput(String in) {

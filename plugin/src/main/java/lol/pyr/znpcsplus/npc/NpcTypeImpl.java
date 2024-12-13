@@ -176,6 +176,11 @@ public class NpcTypeImpl implements NpcType {
                     addProperties("wolf_variant");
                 }
             }
+            if (version.isNewerThanOrEquals(ServerVersion.V_1_21_4)) {
+                if (EntityTypes.isTypeInstanceOf(type, EntityTypes.CREAKING)) {
+                    addProperties("creaking_crumbling");
+                }
+            }
             return new NpcTypeImpl(name, type, hologramOffset, new HashSet<>(allowedProperties), defaultProperties);
         }
     }

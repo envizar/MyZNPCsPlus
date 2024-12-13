@@ -153,6 +153,12 @@ public class V1_8PacketFactory implements PacketFactory {
         sendPacket(player, new WrapperPlayServerEntityEquipment(entity.getEntityId(), Collections.singletonList(equipment)));
     }
 
+    @Override
+    public void setPassenger(Player player, PacketEntity vehicle, PacketEntity passenger) {
+        sendPacket(player, new WrapperPlayServerSetPassengers(vehicle.getEntityId(),
+                passenger == null ? new int[] {} : new int[] {passenger.getEntityId()}));
+    }
+
     protected void sendPacket(Player player, PacketWrapper<?> packet) {
         packetEvents.getPlayerManager().sendPacket(player, packet);
     }

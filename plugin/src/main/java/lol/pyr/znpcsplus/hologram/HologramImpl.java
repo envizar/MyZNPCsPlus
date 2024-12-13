@@ -38,9 +38,9 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void addTextLineComponent(Component line) {
-        HologramText newLine = new HologramText(propertyRegistry, packetFactory, null, line);
+        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
         lines.add(newLine);
-        relocateLines(newLine);
+        relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
@@ -57,9 +57,9 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void addItemLinePEStack(ItemStack item) {
-        HologramItem newLine = new HologramItem(propertyRegistry, packetFactory, null, item);
+        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
         lines.add(newLine);
-        relocateLines(newLine);
+        relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
@@ -99,9 +99,9 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertTextLineComponent(int index, Component line) {
-        HologramText newLine = new HologramText(propertyRegistry, packetFactory, null, line);
+        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
         lines.add(index, newLine);
-        relocateLines(newLine);
+        relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
@@ -114,9 +114,9 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertItemLinePEStack(int index, ItemStack item) {
-        HologramItem newLine = new HologramItem(propertyRegistry, packetFactory, null, item);
+        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
         lines.add(index, newLine);
-        relocateLines(newLine);
+        relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
     }
 
@@ -172,14 +172,10 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     private void relocateLines() {
-        relocateLines(null);
-    }
-
-    private void relocateLines(HologramLine<?> newLine) {
         final double lineSpacing = configManager.getConfig().lineSpacing();
         double height = location.getY() + (lines.size() - 1) * lineSpacing + getOffset();
         for (HologramLine<?> line : lines) {
-            line.setLocation(location.withY(height), line == newLine ? Collections.emptySet() : getViewers());
+            line.setLocation(location.withY(height));
             height -= lineSpacing;
         }
     }

@@ -24,4 +24,5 @@ public interface PacketFactory {
     void sendMetadata(Player player, PacketEntity entity, List<EntityData> data);
     void sendHeadRotation(Player player, PacketEntity entity, float yaw, float pitch);
     void sendHandSwing(Player player, PacketEntity entity, boolean offHand);
+    void setPassenger(Player player, PacketEntity vehicle, PacketEntity passenger);
 }
