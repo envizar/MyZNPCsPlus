@@ -16,11 +16,11 @@ import java.util.Set;
  *     This entity is used to make the NPC sit on an invisible armor stand.
  * </p>
  */
-public class ArmorStandVehicleEntity implements PropertyHolder {
+public class ArmorStandVehicleProperties implements PropertyHolder {
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
 
-    public ArmorStandVehicleEntity(EntityPropertyRegistryImpl propertyRegistry) {
+    public ArmorStandVehicleProperties(EntityPropertyRegistryImpl propertyRegistry) {
         _setProperty(propertyRegistry.getByName("small", Boolean.class), true);
         _setProperty(propertyRegistry.getByName("invisible", Boolean.class), true);
         _setProperty(propertyRegistry.getByName("base_plate", Boolean.class), false);

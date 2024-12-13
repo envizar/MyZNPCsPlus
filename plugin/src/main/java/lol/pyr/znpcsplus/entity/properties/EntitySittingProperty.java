@@ -1,10 +1,8 @@
 package lol.pyr.znpcsplus.entity.properties;
 
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetPassengers;
-import lol.pyr.znpcsplus.entity.ArmorStandVehicleEntity;
+import lol.pyr.znpcsplus.entity.ArmorStandVehicleProperties;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.entity.PacketEntity;
@@ -26,28 +24,12 @@ public class EntitySittingProperty extends EntityPropertyImpl<Boolean> {
     @Override
     public void apply(Player player, PacketEntity entity, boolean isSpawned, Map<Integer, EntityData> properties) {
         boolean sitting = entity.getProperty(this);
-        if (sitting) {
-            ArmorStandVehicleEntity vehicleEntity = new ArmorStandVehicleEntity(propertyRegistry);
-            PacketEntity vehiclePacketEntity = new PacketEntity(packetFactory, vehicleEntity, EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() - 0.9));
-            vehiclePacketEntity.spawn(player);
-            entity.setMetadata("ridingVehicle", vehiclePacketEntity);
-            PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSetPassengers(
-                    vehiclePacketEntity.getEntityId(),
-                    new int[]{entity.getEntityId()}
-            ));
-        } else {
-            if (entity.hasMetadata("ridingVehicle")) {
-                PacketEntity vehicleEntity = (PacketEntity) entity.getMetadata("ridingVehicle");
-                PacketEvents.getAPI().getPlayerManager().sendPacket(player, new WrapperPlayServerSetPassengers(
-                        vehicleEntity.getEntityId(),
-                        new int[]{}
-                ));
-                vehicleEntity.despawn(player);
-                entity.removeMetadata("ridingVehicle");
-                // Send a packet to reset the npc's position
-                packetFactory.teleportEntity(player, entity);
-            }
+        if (sitting) if (entity.getVehicle() == null) {
+            PacketEntity vehiclePacketEntity = new PacketEntity(packetFactory, new ArmorStandVehicleProperties(propertyRegistry),
+                    entity.getViewable(), EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() - 0.9));
+            entity.setVehicle(vehiclePacketEntity);
+        } else if (entity.getVehicle() != null) {
+            entity.setVehicle(null);
         }
     }
-
 }
