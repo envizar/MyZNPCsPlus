@@ -246,4 +246,19 @@ public class NpcImpl extends Viewable implements Npc {
     public void swingHand(boolean offHand) {
         for (Player viewer : getViewers()) entity.swingHand(viewer, offHand);
     }
+
+    @Override
+    public @Nullable List<Integer> getPassengers() {
+        return entity.getPassengers();
+    }
+
+    @Override
+    public void addPassenger(int entityId) {
+        entity.addPassenger(entityId);
+    }
+
+    @Override
+    public void removePassenger(int entityId) {
+        entity.removePassenger(entityId);
+    }
 }

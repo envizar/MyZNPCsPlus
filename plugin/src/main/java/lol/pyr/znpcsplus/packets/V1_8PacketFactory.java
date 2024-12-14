@@ -154,9 +154,8 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     @Override
-    public void setPassenger(Player player, PacketEntity vehicle, PacketEntity passenger) {
-        sendPacket(player, new WrapperPlayServerSetPassengers(vehicle.getEntityId(),
-                passenger == null ? new int[] {} : new int[] {passenger.getEntityId()}));
+    public void setPassengers(Player player, int vehicleEntityId, int... passengers) {
+        sendPacket(player, new WrapperPlayServerSetPassengers(vehicleEntityId, passengers));
     }
 
     protected void sendPacket(Player player, PacketWrapper<?> packet) {

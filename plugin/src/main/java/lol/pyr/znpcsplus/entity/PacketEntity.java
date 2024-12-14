@@ -13,8 +13,11 @@ import lol.pyr.znpcsplus.util.Viewable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class PacketEntity implements PropertyHolder {
     private final PacketFactory packetFactory;
@@ -28,6 +31,7 @@ public class PacketEntity implements PropertyHolder {
     private NpcLocation location;
 
     private PacketEntity vehicle;
+    private List<Integer> passengers;
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, Viewable viewable, EntityType type, NpcLocation location) {
         this.packetFactory = packetFactory;
@@ -69,7 +73,10 @@ public class PacketEntity implements PropertyHolder {
         else packetFactory.spawnEntity(player, this, properties);
         if (vehicle != null) {
             vehicle.spawn(player);
-            packetFactory.setPassenger(player, vehicle, this);
+            packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
+        }
+        if(passengers != null) {
+            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
         }
     }
 
@@ -89,7 +96,7 @@ public class PacketEntity implements PropertyHolder {
         // remove old vehicle
         if (this.vehicle != null) {
             for (Player player : viewable.getViewers()) {
-                packetFactory.setPassenger(player, this.vehicle, null);
+                packetFactory.setPassengers(player, this.vehicle.getEntityId());
                 this.vehicle.despawn(player);
                 packetFactory.teleportEntity(player, this);
             }
@@ -101,7 +108,32 @@ public class PacketEntity implements PropertyHolder {
         vehicle.setLocation(location.withY(location.getY() - 0.9));
         for (Player player : viewable.getViewers()) {
             vehicle.spawn(player);
-            packetFactory.setPassenger(player, vehicle, this);
+            packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
+        }
+    }
+
+    public List<Integer> getPassengers() {
+        return passengers;
+    }
+
+    public void addPassenger(int entityId) {
+        if (passengers == null) {
+            passengers = new ArrayList<>();
+        }
+        passengers.add(entityId);
+        for (Player player : viewable.getViewers()) {
+            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
+        }
+    }
+
+    public void removePassenger(int entityId) {
+        if (passengers == null) return;
+        passengers.remove(entityId);
+        for (Player player : viewable.getViewers()) {
+            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
+        }
+        if (passengers.isEmpty()) {
+            passengers = null;
         }
     }
 
