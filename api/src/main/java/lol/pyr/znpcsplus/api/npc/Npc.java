@@ -196,4 +196,16 @@ public interface Npc extends PropertyHolder {
     void removePassenger(int entityId);
 
 
+    /**
+     * Gets the vehicle entity id of this npc
+     * @return The entity id of the vehicle
+     */
+    @Nullable Integer getVehicleId();
+
+    /**
+     * Sets the vehicle id of this npc
+     * @param vehicleId The entity id of the vehicle
+     */
+    void setVehicleId(Integer vehicleId);
+
 }
