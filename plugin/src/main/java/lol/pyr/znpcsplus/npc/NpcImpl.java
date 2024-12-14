@@ -261,4 +261,16 @@ public class NpcImpl extends Viewable implements Npc {
     public void removePassenger(int entityId) {
         entity.removePassenger(entityId);
     }
+
+    @Override
+    public @Nullable Integer getVehicleId() {
+        return entity.getVehicleId();
+    }
+
+    @Override
+    public void setVehicleId(Integer vehicleId) {
+        entity.setVehicleId(vehicleId);
+    }
+
+
 }

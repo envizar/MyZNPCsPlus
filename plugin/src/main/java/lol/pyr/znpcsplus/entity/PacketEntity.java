@@ -31,6 +31,7 @@ public class PacketEntity implements PropertyHolder {
     private NpcLocation location;
 
     private PacketEntity vehicle;
+    private Integer vehicleId;
     private List<Integer> passengers;
 
     public PacketEntity(PacketFactory packetFactory, PropertyHolder properties, Viewable viewable, EntityType type, NpcLocation location) {
@@ -71,9 +72,8 @@ public class PacketEntity implements PropertyHolder {
     public void spawn(Player player) {
         if (type == EntityTypes.PLAYER) packetFactory.spawnPlayer(player, this, properties);
         else packetFactory.spawnEntity(player, this, properties);
-        if (vehicle != null) {
-            vehicle.spawn(player);
-            packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
+        if (vehicleId != null) {
+            packetFactory.setPassengers(player, vehicleId, this.getEntityId());
         }
         if(passengers != null) {
             packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
@@ -92,6 +92,26 @@ public class PacketEntity implements PropertyHolder {
         return viewable;
     }
 
+    public void setVehicleId(Integer vehicleId) {
+        if (this.vehicle != null) {
+            for (Player player : viewable.getViewers()) {
+                packetFactory.setPassengers(player, this.vehicle.getEntityId());
+                this.vehicle.despawn(player);
+                packetFactory.teleportEntity(player, this);
+            }
+        } else if (this.vehicleId != null) {
+            for (Player player : viewable.getViewers()) {
+                packetFactory.setPassengers(player, this.vehicleId);
+            }
+        }
+        this.vehicleId = vehicleId;
+        if (vehicleId == null) return;
+
+        for (Player player : viewable.getViewers()) {
+            packetFactory.setPassengers(player, this.getEntityId(),  vehicleId);
+        }
+    }
+
     public void setVehicle(PacketEntity vehicle) {
         // remove old vehicle
         if (this.vehicle != null) {
@@ -99,6 +119,10 @@ public class PacketEntity implements PropertyHolder {
                 packetFactory.setPassengers(player, this.vehicle.getEntityId());
                 this.vehicle.despawn(player);
                 packetFactory.teleportEntity(player, this);
+            }
+        } else if (this.vehicleId != null) {
+            for (Player player : viewable.getViewers()) {
+                packetFactory.setPassengers(player, this.vehicleId);
             }
         }
 
@@ -110,6 +134,10 @@ public class PacketEntity implements PropertyHolder {
             vehicle.spawn(player);
             packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
         }
+    }
+
+    public Integer getVehicleId() {
+        return vehicleId;
     }
 
     public List<Integer> getPassengers() {
