@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -248,7 +249,7 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     @Override
-    public @Nullable List<Integer> getPassengers() {
+    public @NotNull List<Integer> getPassengers() {
         return entity.getPassengers();
     }
 
@@ -271,6 +272,4 @@ public class NpcImpl extends Viewable implements Npc {
     public void setVehicleId(Integer vehicleId) {
         entity.setVehicleId(vehicleId);
     }
-
-
 }

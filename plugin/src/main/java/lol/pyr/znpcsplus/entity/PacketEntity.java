@@ -13,11 +13,7 @@ import lol.pyr.znpcsplus.util.Viewable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.IntStream;
+import java.util.*;
 
 public class PacketEntity implements PropertyHolder {
     private final PacketFactory packetFactory;
@@ -75,8 +71,8 @@ public class PacketEntity implements PropertyHolder {
         if (vehicleId != null) {
             packetFactory.setPassengers(player, vehicleId, this.getEntityId());
         }
-        if(passengers != null) {
-            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
+        if (passengers != null) {
+            packetFactory.setPassengers(player, this.getEntityId(), passengers.stream().mapToInt(Integer::intValue).toArray());
         }
     }
 
@@ -108,7 +104,7 @@ public class PacketEntity implements PropertyHolder {
         if (vehicleId == null) return;
 
         for (Player player : viewable.getViewers()) {
-            packetFactory.setPassengers(player, this.getEntityId(),  vehicleId);
+            packetFactory.setPassengers(player, this.getEntityId(), vehicleId);
         }
     }
 
@@ -141,7 +137,7 @@ public class PacketEntity implements PropertyHolder {
     }
 
     public List<Integer> getPassengers() {
-        return passengers;
+        return passengers == null ? Collections.emptyList() : passengers;
     }
 
     public void addPassenger(int entityId) {
@@ -150,7 +146,7 @@ public class PacketEntity implements PropertyHolder {
         }
         passengers.add(entityId);
         for (Player player : viewable.getViewers()) {
-            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
+            packetFactory.setPassengers(player, this.getEntityId(), passengers.stream().mapToInt(Integer::intValue).toArray());
         }
     }
 
@@ -158,7 +154,7 @@ public class PacketEntity implements PropertyHolder {
         if (passengers == null) return;
         passengers.remove(entityId);
         for (Player player : viewable.getViewers()) {
-            packetFactory.setPassengers(player, this.getEntityId(),  passengers.stream().mapToInt(Integer::intValue).toArray());
+            packetFactory.setPassengers(player, this.getEntityId(), passengers.stream().mapToInt(Integer::intValue).toArray());
         }
         if (passengers.isEmpty()) {
             passengers = null;
