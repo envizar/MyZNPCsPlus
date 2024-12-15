@@ -40,7 +40,7 @@ Open an issue in the GitHub [issue tracker](https://github.com/Pyrbu/ZNPCsPlus/i
 
 ## Credits
 - [PacketEvents 2.0](https://github.com/retrooper/packetevents) - Packet library
-- [wiki.vg](https://wiki.vg/Main_Page) - Minecraft protocol documentation
+- [Minecraft Wiki Protocol (formally wiki.vg)](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Main_Page) - Minecraft protocol documentation
 - [gson](https://github.com/google/gson) - JSON parsing library made by Google
 - [Mineskin.org](https://mineskin.org/) - Website for raw skin file uploads
 - [adventure](https://docs.advntr.dev/) - Minecraft text api
