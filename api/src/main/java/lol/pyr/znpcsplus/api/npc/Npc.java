@@ -6,6 +6,7 @@ import lol.pyr.znpcsplus.api.interaction.InteractionAction;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -174,4 +175,35 @@ public interface Npc extends PropertyHolder {
      * @param offHand Should the hand be the offhand
      */
     void swingHand(boolean offHand);
+
+    /**
+     * Gets the passengers of this npc
+     * @return The list of entity ids of the passengers
+     */
+
+    @Nullable List<Integer> getPassengers();
+
+    /**
+     * Adds a passenger to this npc
+     * @param entityId The entity id of the passenger to add
+     */
+    void addPassenger(int entityId);
+
+    /**
+     * Removes a passenger from this npc
+     * @param entityId The entity id of the passenger to remove
+     */
+    void removePassenger(int entityId);
+
+    /**
+     * Gets the vehicle entity id of this npc
+     * @return The entity id of the vehicle
+     */
+    @Nullable Integer getVehicleId();
+
+    /**
+     * Sets the vehicle id of this npc
+     * @param vehicleId The entity id of the vehicle
+     */
+    void setVehicleId(Integer vehicleId);
 }

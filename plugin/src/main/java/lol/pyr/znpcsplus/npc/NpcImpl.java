@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -245,5 +246,30 @@ public class NpcImpl extends Viewable implements Npc {
 
     public void swingHand(boolean offHand) {
         for (Player viewer : getViewers()) entity.swingHand(viewer, offHand);
+    }
+
+    @Override
+    public @NotNull List<Integer> getPassengers() {
+        return entity.getPassengers();
+    }
+
+    @Override
+    public void addPassenger(int entityId) {
+        entity.addPassenger(entityId);
+    }
+
+    @Override
+    public void removePassenger(int entityId) {
+        entity.removePassenger(entityId);
+    }
+
+    @Override
+    public @Nullable Integer getVehicleId() {
+        return entity.getVehicleId();
+    }
+
+    @Override
+    public void setVehicleId(Integer vehicleId) {
+        entity.setVehicleId(vehicleId);
     }
 }
