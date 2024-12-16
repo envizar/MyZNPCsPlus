@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,9 +27,12 @@ public class MojangSkinCache {
 
     private final Map<String, SkinImpl> cache = new ConcurrentHashMap<>();
     private final Map<String, CachedId> idCache = new ConcurrentHashMap<>();
+    private final File skinsFolder;
 
-    public MojangSkinCache(ConfigManager configManager) {
+    public MojangSkinCache(ConfigManager configManager, File skinsFolder) {
         this.configManager = configManager;
+        this.skinsFolder = skinsFolder;
+        if (!skinsFolder.exists()) skinsFolder.mkdirs();
     }
 
     public void cleanCache() {
@@ -142,6 +146,58 @@ public class MojangSkinCache {
         });
     }
 
+    public CompletableFuture<SkinImpl> fetchFromFile(String path) throws FileNotFoundException {
+        File file = new File(skinsFolder, path);
+        if (!file.exists()) throw new FileNotFoundException("File not found: " + path);
+        return CompletableFuture.supplyAsync(() -> {
+            URL apiUrl = parseUrl("https://api.mineskin.org/generate/upload");
+            HttpURLConnection connection = null;
+            try {
+                String boundary = "*****";
+                String CRLF = "\r\n";
+
+                connection = (HttpURLConnection) apiUrl.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                connection.setUseCaches(false);
+                connection.setRequestProperty("Cache-Control", "no-cache");
+                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                OutputStream outputStream = connection.getOutputStream();
+                DataOutputStream out = new DataOutputStream(outputStream);
+                out.writeBytes("--" + boundary + CRLF);
+                out.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"" + CRLF);
+                out.writeBytes("Content-Type: image/png" + CRLF);
+                out.writeBytes(CRLF);
+                out.write(Files.readAllBytes(file.toPath()));
+                out.writeBytes(CRLF);
+                out.writeBytes("--" + boundary + "--" + CRLF);
+                out.flush();
+                out.close();
+                outputStream.close();
+
+                try (Reader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                    JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (obj.has("error")) return null;
+                    if (!obj.has("data")) return null;
+                    JsonObject texture = obj.get("data").getAsJsonObject().get("texture").getAsJsonObject();
+                    return new SkinImpl(texture.get("value").getAsString(), texture.get("signature").getAsString());
+                }
+
+            } catch (IOException exception) {
+                if (!configManager.getConfig().disableSkinFetcherWarnings()) {
+                    logger.warning("Failed to get skin from file:");
+                    exception.printStackTrace();
+                }
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+            return null;
+        });
+    }
+
     public boolean isNameFullyCached(String s) {
         String name = s.toLowerCase();
         if (!idCache.containsKey(name)) return false;
@@ -212,5 +268,9 @@ public class MojangSkinCache {
         } catch (MalformedURLException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    public File getSkinsFolder() {
+        return skinsFolder;
     }
 }
