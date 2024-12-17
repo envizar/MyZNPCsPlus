@@ -296,6 +296,7 @@ public class ZNpcsPlus {
         registerEnumParser(manager, ArmadilloState.class, incorrectUsageMessage);
         registerEnumParser(manager, WoldVariant.class, incorrectUsageMessage);
         registerEnumParser(manager, NpcStorageType.class, incorrectUsageMessage);
+        registerEnumParser(manager, SkeletonType.class, incorrectUsageMessage);
 
         manager.registerCommand("npc", new MultiCommand(bootstrap.loadHelpMessage("root"))
                 .addSubcommand("center", new CenterCommand(npcRegistry))

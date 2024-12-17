@@ -91,6 +91,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         registerEnumSerializer(Sound.class);
         registerEnumSerializer(ArmadilloState.class);
         registerEnumSerializer(WoldVariant.class);
+        registerEnumSerializer(SkeletonType.class);
 
         registerPrimitiveSerializers(Integer.class, Boolean.class, Double.class, Float.class, Long.class, Short.class, Byte.class, String.class);
 
@@ -438,6 +439,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else witherIndex = 17;
         witherIndex += 3; // skip the first 3 indexes, will be used for the other properties later
         register(new IntegerProperty("invulnerable_time", witherIndex, 0, false));
+
+        // Skeleton
+        if (ver.isOlderThan(ServerVersion.V_1_11)) {
+            if (legacyBooleans) register(new EncodedByteProperty<>("skeleton_type", SkeletonType.NORMAL, 13, SkeletonType::getLegacyId));
+            else register(new EncodedIntegerProperty<>("skeleton_type", SkeletonType.NORMAL, ver.isOlderThan(ServerVersion.V_1_10) ? 11 : 12, Enum::ordinal));
+        }
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_9)) return;
         // Shulker
