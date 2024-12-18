@@ -7,13 +7,13 @@ import lol.pyr.znpcsplus.conversion.DataImporter;
 import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.util.FutureUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ImportCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
@@ -33,7 +33,7 @@ public class ImportCommand implements CommandHandler {
         if (importer == null) context.halt(Component.text("Importer not found! Possible importers: " +
                 String.join(", ", importerRegistry.getIds()), NamedTextColor.RED));
 
-        CompletableFuture.runAsync(() -> {
+        FutureUtil.exceptionPrintingRunAsync(() -> {
             if (!importer.isValid()) {
                 context.send(Component.text("There is no data to import from this importer!", NamedTextColor.RED));
                 return;

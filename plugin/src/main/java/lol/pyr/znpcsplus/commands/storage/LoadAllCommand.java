@@ -4,6 +4,7 @@ import lol.pyr.director.adventure.command.CommandContext;
 import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
+import lol.pyr.znpcsplus.util.FutureUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -20,7 +21,7 @@ public class LoadAllCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        CompletableFuture.runAsync(() -> {
+        FutureUtil.exceptionPrintingRunAsync(() -> {
             npcRegistry.reload();
             context.send(Component.text("All NPCs have been re-loaded from storage", NamedTextColor.GREEN));
         });

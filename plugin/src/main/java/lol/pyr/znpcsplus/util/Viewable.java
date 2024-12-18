@@ -30,7 +30,7 @@ public abstract class Viewable {
     private void tryRunQueue() {
         if (visibilityTaskQueue.isEmpty() || queueRunning) return;
         queueRunning = true;
-        CompletableFuture.runAsync(() -> {
+        FutureUtil.exceptionPrintingRunAsync(() -> {
             while (!visibilityTaskQueue.isEmpty()) try {
                 visibilityTaskQueue.remove().run();
             } catch (Exception e) {

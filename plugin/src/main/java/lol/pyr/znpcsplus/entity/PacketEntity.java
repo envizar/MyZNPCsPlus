@@ -8,6 +8,7 @@ import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.reflection.Reflections;
+import lol.pyr.znpcsplus.util.FutureUtil;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 import org.bukkit.entity.Player;
@@ -67,7 +68,7 @@ public class PacketEntity implements PropertyHolder {
     }
 
     public CompletableFuture<Void> spawn(Player player) {
-        return CompletableFuture.runAsync(() -> {
+        return FutureUtil.exceptionPrintingRunAsync(() -> {
             if (type == EntityTypes.PLAYER) packetFactory.spawnPlayer(player, this, properties).join();
             else packetFactory.spawnEntity(player, this, properties);
             if (vehicleId != null) {

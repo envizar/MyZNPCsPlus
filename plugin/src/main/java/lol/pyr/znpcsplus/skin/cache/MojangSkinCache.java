@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.reflection.Reflections;
 import lol.pyr.znpcsplus.skin.SkinImpl;
+import lol.pyr.znpcsplus.util.FutureUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -42,7 +43,7 @@ public class MojangSkinCache {
 
         if (idCache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
 
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             URL url = parseUrl("https://api.mojang.com/users/profiles/minecraft/" + name);
             HttpURLConnection connection = null;
             try {
@@ -75,7 +76,7 @@ public class MojangSkinCache {
 
         if (idCache.containsKey(name.toLowerCase())) return fetchByUUID(idCache.get(name.toLowerCase()).getId());
 
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             URL url = parseUrl("https://api.ashcon.app/mojang/v2/user/" + name);
             HttpURLConnection connection = null;
             try {
@@ -106,7 +107,7 @@ public class MojangSkinCache {
     }
 
     public CompletableFuture<SkinImpl> fetchByUrl(URL url, String variant) {
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             URL apiUrl = parseUrl("https://api.mineskin.org/generate/url");
             HttpURLConnection connection = null;
             try {
@@ -170,7 +171,7 @@ public class MojangSkinCache {
             if (!skin.isExpired()) return CompletableFuture.completedFuture(skin);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
+        return FutureUtil.exceptionPrintingSupplyAsync(() -> {
             URL url = parseUrl("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
             HttpURLConnection connection = null;
             try {
