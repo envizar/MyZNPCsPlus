@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class HologramLine<M> implements PropertyHolder {
     private M value;
@@ -37,8 +38,8 @@ public class HologramLine<M> implements PropertyHolder {
         entity.refreshMeta(player);
     }
 
-    protected void show(Player player) {
-        entity.spawn(player);
+    protected CompletableFuture<Void> show(Player player) {
+        return entity.spawn(player);
     }
 
     protected void hide(Player player) {

@@ -9,6 +9,8 @@ import lol.pyr.znpcsplus.util.Viewable;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.CompletableFuture;
+
 public class HologramText extends HologramLine<Component> {
 
     private static final Component BLANK  = Component.text("%blank%");
@@ -20,10 +22,9 @@ public class HologramText extends HologramLine<Component> {
     }
 
     @Override
-    public void show(Player player) {
-        if (!getValue().equals(BLANK)) {
-            super.show(player);
-        }
+    public CompletableFuture<Void> show(Player player) {
+        if (getValue().equals(BLANK)) return CompletableFuture.completedFuture(null);
+        return super.show(player);
     }
 
     @SuppressWarnings("unchecked")

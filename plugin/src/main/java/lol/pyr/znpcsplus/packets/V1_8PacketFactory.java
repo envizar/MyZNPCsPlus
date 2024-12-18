@@ -47,8 +47,8 @@ public class V1_8PacketFactory implements PacketFactory {
     }
 
     @Override
-    public void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
-        addTabPlayer(player, entity, properties).thenAccept(ignored -> {
+    public CompletableFuture<Void> spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties) {
+        return addTabPlayer(player, entity, properties).thenAccept(ignored -> {
             createTeam(player, entity, properties.getProperty(propertyRegistry.getByName("glow", NamedColor.class)));
             NpcLocation location = entity.getLocation();
             sendPacket(player, new WrapperPlayServerSpawnPlayer(entity.getEntityId(),

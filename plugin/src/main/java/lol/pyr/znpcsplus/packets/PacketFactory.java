@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface PacketFactory {
-    void spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties);
+    CompletableFuture<Void> spawnPlayer(Player player, PacketEntity entity, PropertyHolder properties);
     void spawnEntity(Player player, PacketEntity entity, PropertyHolder properties);
     void destroyEntity(Player player, PacketEntity entity, PropertyHolder properties);
     void teleportEntity(Player player, PacketEntity entity);

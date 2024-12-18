@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Base class for all NPCs
@@ -136,14 +137,16 @@ public interface Npc extends PropertyHolder {
     /**
      * Shows this NPC to a player
      * @param player The {@link Player} to show to
+     * @return A future that completes when the npc is fully shown to the player
      */
-    void show(Player player);
+    CompletableFuture<Void> show(Player player);
 
     /**
      * Respawns this NPC for a player
      * @param player The {@link Player} to respawn for
+     * @return A future that completes when the npc is fully respawned
      */
-    void respawn(Player player);
+    CompletableFuture<Void> respawn(Player player);
 
     /**
      * Sets the head rotation of this NPC for a player

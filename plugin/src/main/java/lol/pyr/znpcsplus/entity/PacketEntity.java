@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class PacketEntity implements PropertyHolder {
     private final PacketFactory packetFactory;
@@ -65,15 +66,17 @@ public class PacketEntity implements PropertyHolder {
         for (Player viewer : viewable.getViewers()) packetFactory.teleportEntity(viewer, this);
     }
 
-    public void spawn(Player player) {
-        if (type == EntityTypes.PLAYER) packetFactory.spawnPlayer(player, this, properties);
-        else packetFactory.spawnEntity(player, this, properties);
-        if (vehicleId != null) {
-            packetFactory.setPassengers(player, vehicleId, this.getEntityId());
-        }
-        if (passengers != null) {
-            packetFactory.setPassengers(player, this.getEntityId(), passengers.stream().mapToInt(Integer::intValue).toArray());
-        }
+    public CompletableFuture<Void> spawn(Player player) {
+        return CompletableFuture.runAsync(() -> {
+            if (type == EntityTypes.PLAYER) packetFactory.spawnPlayer(player, this, properties).join();
+            else packetFactory.spawnEntity(player, this, properties);
+            if (vehicleId != null) {
+                packetFactory.setPassengers(player, vehicleId, this.getEntityId());
+            }
+            if (passengers != null) {
+                packetFactory.setPassengers(player, this.getEntityId(), passengers.stream().mapToInt(Integer::intValue).toArray());
+            }
+        });
     }
 
     public void setHeadRotation(Player player, float yaw, float pitch) {
@@ -127,8 +130,9 @@ public class PacketEntity implements PropertyHolder {
 
         vehicle.setLocation(location.withY(location.getY() - 0.9));
         for (Player player : viewable.getViewers()) {
-            vehicle.spawn(player);
-            packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
+            vehicle.spawn(player).thenRun(() -> {
+                packetFactory.setPassengers(player, vehicle.getEntityId(), this.getEntityId());
+            });
         }
     }
 

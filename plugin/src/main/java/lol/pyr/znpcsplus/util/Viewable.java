@@ -4,11 +4,9 @@ import org.bukkit.entity.Player;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 public abstract class Viewable {
@@ -21,38 +19,74 @@ public abstract class Viewable {
                 .collect(Collectors.toList());
     }
 
-    private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
+    private boolean queueRunning = false;
+    private final Queue<Runnable> visibilityTaskQueue = new ConcurrentLinkedQueue<>();
+    private final Set<Player> viewers = new HashSet<>();
 
     public Viewable() {
         all.add(new WeakReference<>(this));
     }
 
+    private void tryRunQueue() {
+        if (visibilityTaskQueue.isEmpty() || queueRunning) return;
+        queueRunning = true;
+        CompletableFuture.runAsync(() -> {
+            while (!visibilityTaskQueue.isEmpty()) try {
+                visibilityTaskQueue.remove().run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            queueRunning = false;
+        });
+    }
+
+    private void queueVisibilityTask(Runnable runnable) {
+        visibilityTaskQueue.add(runnable);
+        tryRunQueue();
+    }
+
     public void delete() {
-        UNSAFE_hideAll();
-        viewers.clear();
+        queueVisibilityTask(() -> {
+            UNSAFE_hideAll();
+            viewers.clear();
+        });
     }
 
-    public void respawn() {
-        UNSAFE_hideAll();
-        UNSAFE_showAll();
+    public CompletableFuture<Void> respawn() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        queueVisibilityTask(() -> {
+            UNSAFE_hideAll();
+            UNSAFE_showAll().join();
+            future.complete(null);
+        });
+        return future;
     }
 
-    public void respawn(Player player) {
-        if (!viewers.contains(player)) return;
-        UNSAFE_hide(player);
-        UNSAFE_show(player);
+    public CompletableFuture<Void> respawn(Player player) {
+        hide(player);
+        return show(player);
     }
 
-    public void show(Player player) {
-        if (viewers.contains(player)) return;
-        viewers.add(player);
-        UNSAFE_show(player);
+    public CompletableFuture<Void> show(Player player) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        queueVisibilityTask(() -> {
+            if (viewers.contains(player)) {
+                future.complete(null);
+                return;
+            }
+            viewers.add(player);
+            UNSAFE_show(player).join();
+            future.complete(null);
+        });
+        return future;
     }
 
     public void hide(Player player) {
-        if (!viewers.contains(player)) return;
-        viewers.remove(player);
-        UNSAFE_hide(player);
+        queueVisibilityTask(() -> {
+            if (!viewers.contains(player)) return;
+            viewers.remove(player);
+            UNSAFE_hide(player);
+        });
     }
 
     public void UNSAFE_removeViewer(Player player) {
@@ -63,8 +97,11 @@ public abstract class Viewable {
         for (Player viewer : viewers) UNSAFE_hide(viewer);
     }
 
-    protected void UNSAFE_showAll() {
-        for (Player viewer : viewers) UNSAFE_show(viewer);
+    protected CompletableFuture<Void> UNSAFE_showAll() {
+        return FutureUtil.allOf(viewers.stream()
+                .map(this::UNSAFE_show)
+                .collect(Collectors.toList()));
+        // for (Player viewer : viewers) UNSAFE_show(viewer);
     }
 
     public Set<Player> getViewers() {
@@ -75,7 +112,7 @@ public abstract class Viewable {
         return viewers.contains(player);
     }
 
-    protected abstract void UNSAFE_show(Player player);
+    protected abstract CompletableFuture<Void> UNSAFE_show(Player player);
 
     protected abstract void UNSAFE_hide(Player player);
 }

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class NpcImpl extends Viewable implements Npc {
@@ -126,9 +127,8 @@ public class NpcImpl extends Viewable implements Npc {
     }
 
     @Override
-    protected void UNSAFE_show(Player player) {
-        entity.spawn(player);
-        hologram.show(player);
+    protected CompletableFuture<Void> UNSAFE_show(Player player) {
+        return CompletableFuture.allOf(entity.spawn(player), hologram.show(player));
     }
 
     @Override
