@@ -10,7 +10,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class LoadAllCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;

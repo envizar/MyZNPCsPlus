@@ -101,7 +101,6 @@ public abstract class Viewable {
         return FutureUtil.allOf(viewers.stream()
                 .map(this::UNSAFE_show)
                 .collect(Collectors.toList()));
-        // for (Player viewer : viewers) UNSAFE_show(viewer);
     }
 
     public Set<Player> getViewers() {
