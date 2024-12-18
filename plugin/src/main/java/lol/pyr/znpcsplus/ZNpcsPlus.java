@@ -93,7 +93,7 @@ public class ZNpcsPlus {
         packetEvents.load();
 
         configManager = new ConfigManager(getDataFolder());
-        skinCache = new MojangSkinCache(configManager);
+        skinCache = new MojangSkinCache(configManager, new File(getDataFolder(), "skins"));
         propertyRegistry = new EntityPropertyRegistryImpl(skinCache, configManager);
 
         NpcPropertyRegistryProvider.register(propertyRegistry);

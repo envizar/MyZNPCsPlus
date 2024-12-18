@@ -8,6 +8,7 @@ import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 import lol.pyr.znpcsplus.util.FutureUtil;
 import org.bukkit.entity.Player;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +25,16 @@ public class PrefetchedDescriptor implements BaseSkinDescriptor, SkinDescriptor 
 
     public static CompletableFuture<PrefetchedDescriptor> fromUrl(MojangSkinCache cache, URL url, String variant) {
         return FutureUtil.exceptionPrintingSupplyAsync(() -> new PrefetchedDescriptor(cache.fetchByUrl(url, variant).join()));
+    }
+
+    public static CompletableFuture<PrefetchedDescriptor> fromFile(MojangSkinCache cache, String path) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return new PrefetchedDescriptor(cache.fetchFromFile(path).join());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override

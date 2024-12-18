@@ -17,10 +17,14 @@ import lol.pyr.znpcsplus.skin.descriptor.PrefetchedDescriptor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkinCommand implements CommandHandler {
     private final MojangSkinCache skinCache;
@@ -90,6 +94,30 @@ public class SkinCommand implements CommandHandler {
                 context.send(Component.text("Invalid url!", NamedTextColor.RED));
             }
             return;
+        } else if (type.equalsIgnoreCase("file")) {
+            context.ensureArgsNotEmpty();
+            String path = context.dumpAllArgs();
+            context.send(Component.text("Fetching skin from file \"" + path + "\"...", NamedTextColor.GREEN));
+            PrefetchedDescriptor.fromFile(skinCache, path).exceptionally(e -> {
+                if (e instanceof FileNotFoundException || e.getCause() instanceof FileNotFoundException) {
+                    context.send(Component.text("A file at the specified path could not be found!", NamedTextColor.RED));
+                } else {
+                    context.send(Component.text("An error occurred while fetching the skin from file! Check the console for more details.", NamedTextColor.RED));
+                    //noinspection CallToPrintStackTrace
+                    e.printStackTrace();
+                }
+                return null;
+            }).thenAccept(skin -> {
+                if (skin == null) return;
+                if (skin.getSkin() == null) {
+                    context.send(Component.text("Failed to fetch skin, are you sure the file path is valid?", NamedTextColor.RED));
+                    return;
+                }
+                npc.setProperty(propertyRegistry.getByName("skin", SkinDescriptor.class), skin);
+                npc.respawn();
+                context.send(Component.text("The NPC's skin has been set.", NamedTextColor.GREEN));
+            });
+            return;
         }
         context.send(Component.text("Unknown skin type! Please use one of the following: mirror, static, dynamic, url"));
     }
@@ -97,10 +125,18 @@ public class SkinCommand implements CommandHandler {
     @Override
     public List<String> suggest(CommandContext context) throws CommandExecutionException {
         if (context.argSize() == 1) return context.suggestCollection(npcRegistry.getModifiableIds());
-        if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic", "url");
+        if (context.argSize() == 2) return context.suggestLiteral("mirror", "static", "dynamic", "url", "file");
         if (context.matchSuggestion("*", "static")) return context.suggestPlayers();
         if (context.argSize() == 3 && context.matchSuggestion("*", "url")) {
             return context.suggestLiteral("slim", "classic");
+        }
+        if (context.argSize() == 3 && context.matchSuggestion("*", "file")) {
+            if (skinCache.getSkinsFolder().exists()) {
+                File[] files = skinCache.getSkinsFolder().listFiles();
+                if (files != null) {
+                    return Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+                }
+            }
         }
         return Collections.emptyList();
     }
