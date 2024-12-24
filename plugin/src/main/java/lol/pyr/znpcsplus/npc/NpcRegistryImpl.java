@@ -14,6 +14,7 @@ import lol.pyr.znpcsplus.hologram.HologramText;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
+import lol.pyr.znpcsplus.serialization.NpcSerializerRegistryImpl;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.storage.NpcStorageType;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -35,13 +36,13 @@ public class NpcRegistryImpl implements NpcRegistry {
     private final Map<String, NpcEntryImpl> npcIdLookupMap = new HashMap<>();
     private final Map<UUID, NpcEntryImpl> npcUuidLookupMap = new HashMap<>();
 
-    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistryImpl actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer) {
+    public NpcRegistryImpl(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistryImpl actionRegistry, TaskScheduler scheduler, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, NpcSerializerRegistryImpl serializerRegistry, LegacyComponentSerializer textSerializer) {
         this.textSerializer = textSerializer;
         this.propertyRegistry = propertyRegistry;
-        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+        storage = configManager.getConfig().storageType().create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer, serializerRegistry);
         if (storage == null) {
             Bukkit.getLogger().warning("Failed to initialize storage, falling back to YAML");
-            storage = NpcStorageType.YAML.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+            storage = NpcStorageType.YAML.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer, serializerRegistry);
         }
         this.packetFactory = packetFactory;
         this.configManager = configManager;
@@ -52,7 +53,13 @@ public class NpcRegistryImpl implements NpcRegistry {
         }
     }
 
+    @Override
+    public void register(NpcEntry entry) {
+        register((NpcEntryImpl) entry);
+    }
+
     private void register(NpcEntryImpl entry) {
+        if (entry == null) throw new NullPointerException();
         unregister(npcIdLookupMap.put(entry.getId(), entry));
         unregister(npcUuidLookupMap.put(entry.getNpc().getUuid(), entry));
         npcList.add(entry);

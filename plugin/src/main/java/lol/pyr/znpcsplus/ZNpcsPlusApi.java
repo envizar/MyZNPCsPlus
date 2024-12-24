@@ -12,6 +12,7 @@ import lol.pyr.znpcsplus.interaction.ActionFactoryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
+import lol.pyr.znpcsplus.serialization.NpcSerializerRegistryImpl;
 import lol.pyr.znpcsplus.skin.SkinDescriptorFactoryImpl;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
 
@@ -22,14 +23,16 @@ public class ZNpcsPlusApi implements NpcApi {
     private final ActionRegistryImpl actionRegistry;
     private final ActionFactoryImpl actionFactory;
     private final SkinDescriptorFactoryImpl skinDescriptorFactory;
+    private final NpcSerializerRegistryImpl npcSerializerRegistry;
 
-    public ZNpcsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, ActionRegistryImpl actionRegistry, ActionFactoryImpl actionFactory, MojangSkinCache skinCache) {
+    public ZNpcsPlusApi(NpcRegistryImpl npcRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, ActionRegistryImpl actionRegistry, ActionFactoryImpl actionFactory, MojangSkinCache skinCache, NpcSerializerRegistryImpl npcSerializerRegistry) {
         this.npcRegistry = npcRegistry;
         this.typeRegistry = typeRegistry;
         this.propertyRegistry = propertyRegistry;
         this.actionRegistry = actionRegistry;
         this.actionFactory = actionFactory;
         this.skinDescriptorFactory = new SkinDescriptorFactoryImpl(skinCache);
+        this.npcSerializerRegistry = npcSerializerRegistry;
     }
 
     @Override
@@ -61,5 +64,10 @@ public class ZNpcsPlusApi implements NpcApi {
     @Override
     public SkinDescriptorFactory getSkinDescriptorFactory() {
         return skinDescriptorFactory;
+    }
+
+    @Override
+    public NpcSerializerRegistryImpl getNpcSerializerRegistry() {
+        return npcSerializerRegistry;
     }
 }

@@ -11,6 +11,7 @@ import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
 import lol.pyr.znpcsplus.npc.NpcTypeRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
+import lol.pyr.znpcsplus.serialization.NpcSerializerRegistryImpl;
 import lol.pyr.znpcsplus.storage.NpcStorage;
 import lol.pyr.znpcsplus.storage.NpcStorageType;
 import net.kyori.adventure.text.Component;
@@ -35,8 +36,9 @@ public class MigrateCommand implements CommandHandler {
     private final NpcStorage currentStorage;
     private final NpcStorageType currentStorageType;
     private final NpcRegistryImpl npcRegistry;
+    private final NpcSerializerRegistryImpl serializerRegistry;
 
-    public MigrateCommand(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistryImpl actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, NpcStorage currentStorage, NpcStorageType currentStorageType, NpcRegistryImpl npcRegistry) {
+    public MigrateCommand(ConfigManager configManager, ZNpcsPlus plugin, PacketFactory packetFactory, ActionRegistryImpl actionRegistry, NpcTypeRegistryImpl typeRegistry, EntityPropertyRegistryImpl propertyRegistry, LegacyComponentSerializer textSerializer, NpcStorage currentStorage, NpcStorageType currentStorageType, NpcRegistryImpl npcRegistry, NpcSerializerRegistryImpl serializerRegistry) {
         this.configManager = configManager;
         this.plugin = plugin;
         this.packetFactory = packetFactory;
@@ -47,6 +49,7 @@ public class MigrateCommand implements CommandHandler {
         this.currentStorage = currentStorage;
         this.currentStorageType = currentStorageType;
         this.npcRegistry = npcRegistry;
+        this.serializerRegistry = serializerRegistry;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class MigrateCommand implements CommandHandler {
         if (currentStorageType == from) {
             fromStorage = currentStorage;
         } else {
-            fromStorage = from.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+            fromStorage = from.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer, serializerRegistry);
             if (fromStorage == null) {
                 context.halt(Component.text("Failed to initialize the source storage. Please check the console for more information.", NamedTextColor.RED));
                 return;
@@ -84,7 +87,7 @@ public class MigrateCommand implements CommandHandler {
         if (currentStorageType == to) {
             toStorage = currentStorage;
         } else {
-            toStorage = to.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer);
+            toStorage = to.create(configManager, plugin, packetFactory, actionRegistry, typeRegistry, propertyRegistry, textSerializer, serializerRegistry);
             if (toStorage == null) {
                 context.halt(Component.text("Failed to initialize the destination storage. Please check the console for more information.", NamedTextColor.RED));
                 return;

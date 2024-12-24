@@ -5,6 +5,7 @@ import lol.pyr.znpcsplus.api.interaction.ActionFactory;
 import lol.pyr.znpcsplus.api.interaction.ActionRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcRegistry;
 import lol.pyr.znpcsplus.api.npc.NpcTypeRegistry;
+import lol.pyr.znpcsplus.api.serialization.NpcSerializerRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptorFactory;
 
 /**
@@ -46,4 +47,10 @@ public interface NpcApi {
      * @return the skin descriptor factory
      */
     SkinDescriptorFactory getSkinDescriptorFactory();
+
+    /**
+     * Gets the npc serializer registry.
+     * @return the npc serializer registry
+     */
+    NpcSerializerRegistry getNpcSerializerRegistry();
 }
