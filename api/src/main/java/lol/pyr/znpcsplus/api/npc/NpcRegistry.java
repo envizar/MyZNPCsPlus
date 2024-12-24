@@ -71,4 +71,14 @@ public interface NpcRegistry {
      * @param entry The npc to be registered
      */
     void register(NpcEntry entry);
+
+    /**
+     * Reload all saveable npcs from storage
+     */
+    void reload();
+
+    /**
+     * Save all saveable npcs to storage
+     */
+    void save();
 }
