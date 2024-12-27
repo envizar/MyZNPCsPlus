@@ -126,6 +126,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new DummyProperty<>("look", LookType.FIXED));
         register(new DummyProperty<>("look_distance", configManager.getConfig().lookPropertyDistance()));
+        register(new DummyProperty<>("look_return", false));
         register(new DummyProperty<>("view_distance", configManager.getConfig().viewDistance()));
 
         register(new DummyProperty<>("permission_required", false));
