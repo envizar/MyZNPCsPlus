@@ -127,7 +127,7 @@ public class YamlSerializer implements NpcSerializer<YamlConfiguration> {
         NpcEntryImpl entry = new NpcEntryImpl(config.getString("id"), npc);
         entry.setProcessed(config.getBoolean("is-processed"));
         entry.setAllowCommandModification(config.getBoolean("allow-commands"));
-        entry.setSave(config.getBoolean("save"));
+        entry.setSave(config.getBoolean("save", true));
 
         return entry;
     }
