@@ -30,9 +30,27 @@ dependencies {
     implementation project(":api")
 }
 
+ext {
+    gitBranch = System.getenv('GIT_BRANCH') ?: ''
+    gitCommitHash = System.getenv('GIT_COMMIT') ?: ''
+    buildId = System.getenv('BUILD_ID') ?: ''
+}
+
 shadowJar {
     archivesBaseName = "ZNPCsPlus"
     archiveClassifier.set ""
+
+    manifest {
+        if (gitBranch?.trim()) {
+            attributes('Git-Branch': gitBranch)
+        }
+        if (gitCommitHash?.trim()) {
+            attributes('Git-Commit': gitCommitHash)
+        }
+        if (buildId?.trim()) {
+            attributes('Build-Id': buildId)
+        }
+    }
 
     relocate "org.objectweb.asm", "lol.pyr.znpcsplus.libraries.asm"
     relocate "me.lucko.jarrelocator", "lol.pyr.znpcsplus.libraries.jarrelocator"
