@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.entity;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.pose.EntityPose;
 import com.github.retrooper.packetevents.protocol.nbt.NBTCompound;
@@ -15,6 +16,7 @@ import lol.pyr.znpcsplus.api.entity.EntityPropertyRegistry;
 import lol.pyr.znpcsplus.api.skin.SkinDescriptor;
 import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.properties.*;
+import lol.pyr.znpcsplus.entity.properties.attributes.AttributeProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerTypeProperty;
@@ -126,6 +128,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         register(new DummyProperty<>("look", LookType.FIXED));
         register(new DummyProperty<>("look_distance", configManager.getConfig().lookPropertyDistance()));
+        register(new DummyProperty<>("look_return", false));
         register(new DummyProperty<>("view_distance", configManager.getConfig().viewDistance()));
 
         register(new DummyProperty<>("permission_required", false));
@@ -152,6 +155,16 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new HologramItemProperty());
         linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
+
+        // Attribute Max Health
+        register(new AttributeProperty(packetFactory, "attribute_max_health", Attributes.MAX_HEALTH));
+
+        // Health - LivingEntity
+        int healthIndex = 6;
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) healthIndex = 9;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) healthIndex = 8;
+        else if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) healthIndex = 7;
+        register(new HealthProperty(healthIndex));
 
         final int tameableIndex;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) tameableIndex = 17;

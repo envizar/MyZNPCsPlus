@@ -33,6 +33,7 @@ public class NpcProcessorTask extends BukkitRunnable {
         EntityPropertyImpl<Integer> viewDistanceProperty = propertyRegistry.getByName("view_distance", Integer.class); // Not sure why this is an Integer, but it is
         EntityPropertyImpl<LookType> lookProperty = propertyRegistry.getByName("look", LookType.class);
         EntityPropertyImpl<Double> lookDistanceProperty = propertyRegistry.getByName("look_distance", Double.class);
+        EntityPropertyImpl<Boolean> lookReturnProperty = propertyRegistry.getByName("look_return", Boolean.class);
         EntityPropertyImpl<Boolean> permissionRequiredProperty = propertyRegistry.getByName("permission_required", Boolean.class);
         EntityPropertyImpl<Boolean> playerKnockbackProperty = propertyRegistry.getByName("player_knockback", Boolean.class);
         EntityPropertyImpl<String> playerKnockbackExemptPermissionProperty = propertyRegistry.getByName("player_knockback_exempt_permission", String.class);
@@ -45,6 +46,7 @@ public class NpcProcessorTask extends BukkitRunnable {
         EntityPropertyImpl<Float> playerKnockbackSoundVolumeProperty = propertyRegistry.getByName("player_knockback_sound_volume", Float.class);
         EntityPropertyImpl<Float> playerKnockbackSoundPitchProperty = propertyRegistry.getByName("player_knockback_sound_pitch", Float.class);
         double lookDistance;
+        boolean lookReturn;
         boolean permissionRequired;
         boolean playerKnockback;
         String playerKnockbackExemptPermission = null;
@@ -64,6 +66,7 @@ public class NpcProcessorTask extends BukkitRunnable {
             Player closest = null;
             LookType lookType = npc.getProperty(lookProperty);
             lookDistance =  NumberConversions.square(npc.getProperty(lookDistanceProperty));
+            lookReturn = npc.getProperty(lookReturnProperty);
             permissionRequired = npc.getProperty(permissionRequiredProperty);
             playerKnockback = npc.getProperty(playerKnockbackProperty);
             if (playerKnockback) {
@@ -106,9 +109,13 @@ public class NpcProcessorTask extends BukkitRunnable {
                         closestDist = distance;
                         closest = player;
                     }
-                    if (lookType.equals(LookType.PER_PLAYER) && lookDistance >= distance) {
-                        NpcLocation expected = npc.getLocation().lookingAt(player.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
-                        if (!expected.equals(npc.getLocation())) npc.setHeadRotation(player, expected.getYaw(), expected.getPitch());
+                    if (lookType.equals(LookType.PER_PLAYER)) {
+                        if (lookDistance >= distance) {
+                            NpcLocation expected = npc.getLocation().lookingAt(player.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
+                            npc.setHeadRotation(player, expected.getYaw(), expected.getPitch());
+                        } else if (lookReturn) {
+                            npc.setHeadRotation(player, npc.getLocation().getYaw(), npc.getLocation().getPitch());
+                        }
                     }
 
                     // player knockback
@@ -132,7 +139,11 @@ public class NpcProcessorTask extends BukkitRunnable {
                 if (closest != null && lookDistance >= closestDist) {
                     NpcLocation expected = npc.getLocation().lookingAt(closest.getLocation().add(0, -npc.getType().getHologramOffset(), 0));
                     if (!expected.equals(npc.getLocation())) npc.setHeadRotation(expected.getYaw(), expected.getPitch());
+                } else if (lookReturn) {
+                    npc.setHeadRotation(npc.getLocation().getYaw(), npc.getLocation().getPitch());
                 }
+            } else if (lookType.equals(LookType.FIXED)) {
+                npc.setHeadRotation(npc.getLocation().getYaw(), npc.getLocation().getPitch());
             }
         }
     }

@@ -36,6 +36,7 @@ public class V1_20_2PacketFactory extends V1_19_3PacketFactory {
                     npcLocationToVector(location), location.getPitch(), location.getYaw(), location.getYaw(), 0, Optional.of(new Vector3d())));
             sendPacket(player, new WrapperPlayServerEntityHeadLook(entity.getEntityId(), location.getYaw()));
             sendAllMetadata(player, entity, properties);
+            sendAllAttributes(player, entity, properties);
             scheduler.runLaterAsync(() -> removeTabPlayer(player, entity), configManager.getConfig().tabHideDelay());
         });
     }

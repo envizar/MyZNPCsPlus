@@ -342,6 +342,7 @@ public class ZNpcsPlus {
                         .addSubcommand("delete", new ActionDeleteCommand(npcRegistry))
                         .addSubcommand("edit", new ActionEditCommand(npcRegistry, actionRegistry))
                         .addSubcommand("list", new ActionListCommand(npcRegistry)))
+                .addSubcommand("version", new VersionCommand(this))
         );
     }
 

@@ -11,6 +11,7 @@ import lol.pyr.director.adventure.command.CommandHandler;
 import lol.pyr.director.common.command.CommandExecutionException;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
+import lol.pyr.znpcsplus.entity.properties.attributes.AttributeProperty;
 import lol.pyr.znpcsplus.npc.NpcEntryImpl;
 import lol.pyr.znpcsplus.npc.NpcImpl;
 import lol.pyr.znpcsplus.npc.NpcRegistryImpl;
@@ -123,6 +124,15 @@ public class PropertySetCommand implements CommandHandler {
         else if (type == Vector3i.class) {
             value = context.parse(type);
             valueName = value == null ? "NONE" : ((Vector3i) value).toPrettyString();
+        }
+        else if (property instanceof AttributeProperty) {
+            value = context.parse(type);
+            if ((double) value < ((AttributeProperty) property).getMinValue() || (double) value > ((AttributeProperty) property).getMaxValue()) {
+                double sanitizedValue = ((AttributeProperty) property).sanitizeValue((double) value);
+                context.send(Component.text("WARNING: Value " + value + " is out of range for property " + property.getName() + ", setting to " + sanitizedValue, NamedTextColor.YELLOW));
+                value = sanitizedValue;
+            }
+            valueName = String.valueOf(value);
         }
         else {
             try {

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class NpcImpl extends Viewable implements Npc {
@@ -39,6 +40,8 @@ public class NpcImpl extends Viewable implements Npc {
 
     private final Map<EntityPropertyImpl<?>, Object> propertyMap = new HashMap<>();
     private final List<InteractionAction> actions = new ArrayList<>();
+
+    private final Map<UUID, float[]> playerLookMap = new ConcurrentHashMap<>();
 
     protected NpcImpl(UUID uuid, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, LegacyComponentSerializer textSerializer, World world, NpcTypeImpl type, NpcLocation location, PacketFactory packetFactory) {
         this(uuid, propertyRegistry, configManager, packetFactory, textSerializer, world.getName(), type, location);
@@ -87,18 +90,32 @@ public class NpcImpl extends Viewable implements Npc {
 
     public void setLocation(NpcLocation location) {
         this.location = location;
+        playerLookMap.clear();
+        playerLookMap.putAll(getViewers().stream().collect(Collectors.toMap(Player::getUniqueId, player -> new float[]{location.getYaw(), location.getPitch()})));
         entity.setLocation(location);
         hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
     }
 
     public void setHeadRotation(Player player, float yaw, float pitch) {
+        if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) return;
+        playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
         entity.setHeadRotation(player, yaw, pitch);
     }
 
     public void setHeadRotation(float yaw, float pitch) {
         for (Player player : getViewers()) {
+            if (getHeadYaw(player) == yaw && getHeadPitch(player) == pitch) continue;
+            playerLookMap.put(player.getUniqueId(), new float[]{yaw, pitch});
             entity.setHeadRotation(player, yaw, pitch);
         }
+    }
+
+    public float getHeadYaw(Player player) {
+        return playerLookMap.getOrDefault(player.getUniqueId(), new float[]{location.getYaw(), location.getPitch()})[0];
+    }
+
+    public float getHeadPitch(Player player) {
+        return playerLookMap.getOrDefault(player.getUniqueId(), new float[]{location.getYaw(), location.getPitch()})[1];
     }
 
     public HologramImpl getHologram() {
@@ -128,11 +145,13 @@ public class NpcImpl extends Viewable implements Npc {
 
     @Override
     protected CompletableFuture<Void> UNSAFE_show(Player player) {
+        playerLookMap.put(player.getUniqueId(), new float[]{location.getYaw(), location.getPitch()});
         return CompletableFuture.allOf(entity.spawn(player), hologram.show(player));
     }
 
     @Override
     protected void UNSAFE_hide(Player player) {
+        playerLookMap.remove(player.getUniqueId());
         entity.despawn(player);
         hologram.hide(player);
     }
