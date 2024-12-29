@@ -52,4 +52,9 @@ public class SkinDescriptorFactoryImpl implements SkinDescriptorFactory {
     public SkinDescriptor createUrlDescriptor(URL url, String variant) {
         return PrefetchedDescriptor.fromUrl(skinCache, url, variant).join();
     }
+
+    @Override
+    public SkinDescriptor createFileDescriptor(String path) {
+        return PrefetchedDescriptor.fromFile(skinCache, path).join();
+    }
 }
