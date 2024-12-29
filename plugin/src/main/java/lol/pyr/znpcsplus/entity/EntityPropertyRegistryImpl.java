@@ -159,6 +159,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         // Attribute Max Health
         register(new AttributeProperty(packetFactory, "attribute_max_health", Attributes.MAX_HEALTH));
 
+        // Attribute Scale
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_20_5)) {
+            register(new AttributeProperty(packetFactory, "attribute_scale", Attributes.SCALE));
+        }
+
         // Health - LivingEntity
         int healthIndex = 6;
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_17)) healthIndex = 9;
