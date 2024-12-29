@@ -25,7 +25,7 @@ public class ToggleCommand implements CommandHandler {
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         boolean enabled;
         if (context.argSize() == 1) {
-            enabled = context.popString().equals("enable");
+            enabled = context.popString().equalsIgnoreCase("enable");
         } else {
             enabled = !npc.isEnabled();
         }
