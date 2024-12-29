@@ -4,6 +4,15 @@ subprojects {
     group "lol.pyr"
     version "2.1.0" + (System.getenv().containsKey("BUILD_ID") ? "-SNAPSHOT" : "")
 
+    // ONLY FOR ENVIZAR'S NIXOS
+    tasks.withType(JavaCompile).configureEach {
+        options.fork = true
+        options.forkOptions.executable = '/nix/store/49fcjmjdqs3xc2x4k50hbc8nmvw3vbx0-zulu-ca-jdk-8.0.422/bin/javac'
+    }
+    tasks.withType(Test).configureEach {
+        executable = '/nix/store/49fcjmjdqs3xc2x4k50hbc8nmvw3vbx0-zulu-ca-jdk-8.0.422/bin/java'
+    }
+
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(8))
     }
