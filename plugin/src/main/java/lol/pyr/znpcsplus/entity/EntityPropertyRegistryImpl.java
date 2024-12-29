@@ -670,8 +670,6 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
 
-        register(new EquipmentProperty(packetFactory, "body", EquipmentSlot.BODY));
-
         // Camel
         int camelIndex = 18;
         register(new BooleanProperty("bashing", camelIndex++, false, legacyBooleans));
@@ -689,6 +687,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EncodedIntegerProperty<>("wolf_variant", WoldVariant.PALE, wolfIndex, WoldVariant::getId, EntityDataTypes.WOLF_VARIANT));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21)) return;
+
+        register(new EquipmentProperty(packetFactory, "body", EquipmentSlot.BODY));
 
         // Bogged
         register(new BooleanProperty("bogged_sheared", 16, false, legacyBooleans));
