@@ -11,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ToggleCommand implements CommandHandler {
     private final NpcRegistryImpl npcRegistry;
@@ -25,7 +26,7 @@ public class ToggleCommand implements CommandHandler {
         NpcImpl npc = context.parse(NpcEntryImpl.class).getNpc();
         boolean enabled;
         if (context.argSize() == 1) {
-            enabled = context.popString().equalsIgnoreCase("enable");
+            enabled = context.popString().equals("enable");
         } else {
             enabled = !npc.isEnabled();
         }
