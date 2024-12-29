@@ -507,8 +507,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) llamaIndex = 19;
         else llamaIndex = 17;
 
-        // Removed in 1.20
-        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
+        // Removed in 1.21
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_21)) register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
         register(new EncodedIntegerProperty<>("llama_variant", LlamaVariant.CREAMY, llamaIndex, Enum::ordinal));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
