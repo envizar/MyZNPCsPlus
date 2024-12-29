@@ -221,7 +221,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "llama", EntityTypes.LLAMA)
                 .setHologramOffset(-0.105)
-                .addProperties("carpet_color", "llama_variant"));
+                .addProperties("carpet_color", "llama_variant", "body"));
 
         register(builder(p, "vex", EntityTypes.VEX)
                 .setHologramOffset(-1.175)

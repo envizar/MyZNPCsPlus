@@ -493,7 +493,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_15)) llamaIndex = 20;
         else if (ver.isNewerThanOrEquals(ServerVersion.V_1_14)) llamaIndex = 19;
         else llamaIndex = 17;
-        register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
+
+        // Removed in 1.20
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) register(new EncodedIntegerProperty<DyeColor>("carpet_color", DyeColor.class, llamaIndex++, obj -> obj == null ? -1 : obj.ordinal()));
         register(new EncodedIntegerProperty<>("llama_variant", LlamaVariant.CREAMY, llamaIndex, Enum::ordinal));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_12)) return;
@@ -654,6 +656,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new EncodedIntegerProperty<>("warden_anger", 0, 16, b -> Math.min(150, Math.max(0, b))));
 
         if (!ver.isNewerThanOrEquals(ServerVersion.V_1_20)) return;
+
+        register(new EquipmentProperty(packetFactory, "body", EquipmentSlot.BODY));
 
         // Camel
         int camelIndex = 18;
