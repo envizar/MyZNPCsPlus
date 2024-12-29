@@ -26,12 +26,18 @@ public class CreateCommand implements CommandHandler {
 
     @Override
     public void run(CommandContext context) throws CommandExecutionException {
-        context.setUsage(context.getLabel() + " create <id> <type>");
+        context.setUsage(context.getLabel() + " create <id> [<type>]");
         Player player = context.ensureSenderIsPlayer();
         
         String id = context.popString();
         if (npcRegistry.getById(id) != null) context.halt(Component.text("NPC with that ID already exists.", NamedTextColor.RED));
-        NpcTypeImpl type = context.parse(NpcTypeImpl.class);
+
+        NpcTypeImpl type;
+        if (context.argSize() == 1) {
+            type = context.parse(NpcTypeImpl.class);
+        } else {
+            type = typeRegistry.getByName("player");
+        }
 
         NpcEntryImpl entry = npcRegistry.create(id, player.getWorld(), type, new NpcLocation(player.getLocation()));
         entry.enableEverything();
