@@ -12,4 +12,5 @@ public interface SkinDescriptorFactory {
     SkinDescriptor createStaticDescriptor(String texture, String signature);
     SkinDescriptor createUrlDescriptor(String url, String variant);
     SkinDescriptor createUrlDescriptor(URL url, String variant);
+    SkinDescriptor createFileDescriptor(String path);
 }
