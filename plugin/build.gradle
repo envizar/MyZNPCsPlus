@@ -8,7 +8,7 @@ runServer {
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(21)
     }
-    minecraftVersion "1.21.3"
+    minecraftVersion "1.21.4"
 }
 
 processResources {
