@@ -6,6 +6,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public abstract class Viewable {
 
     private boolean queueRunning = false;
     private final Queue<Runnable> visibilityTaskQueue = new ConcurrentLinkedQueue<>();
-    private final Set<Player> viewers = new HashSet<>();
+    private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
 
     public Viewable() {
         all.add(new WeakReference<>(this));
