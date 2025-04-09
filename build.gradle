@@ -7,10 +7,10 @@ subprojects {
     // ONLY FOR ENVIZAR'S NIXOS
     tasks.withType(JavaCompile).configureEach {
         options.fork = true
-        options.forkOptions.executable = '/nix/store/49fcjmjdqs3xc2x4k50hbc8nmvw3vbx0-zulu-ca-jdk-8.0.422/bin/javac'
+        options.forkOptions.executable = '/nix/store/x3n1isy45z66r9j8nr6nccmf3p1zf3pn-zulu-ca-jdk-8.0.422/bin/javac'
     }
     tasks.withType(Test).configureEach {
-        executable = '/nix/store/49fcjmjdqs3xc2x4k50hbc8nmvw3vbx0-zulu-ca-jdk-8.0.422/bin/java'
+        executable = '/nix/store/x3n1isy45z66r9j8nr6nccmf3p1zf3pn-zulu-ca-jdk-8.0.422/bin/java'
     }
 
     java {
