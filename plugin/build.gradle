@@ -9,6 +9,9 @@ runServer {
         languageVersion = JavaLanguageVersion.of(21)
     }
     minecraftVersion "1.21.8"
+    downloadPlugins {
+        modrinth("packetevents", "2.9.4+spigot")
+    }
 }
 
 processResources {
