@@ -401,6 +401,11 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
         register(builder(p, "creaking", EntityTypes.CREAKING)
                 .setHologramOffset(0.725)
                 .addProperties("creaking_active"));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_21_6)) return;
+
+        register(builder(p, "happy_ghast", EntityTypes.HAPPY_GHAST)
+                .setHologramOffset(2));
     }
 
     public Collection<NpcType> getAll() {
