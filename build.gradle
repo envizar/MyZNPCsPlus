@@ -1,20 +1,21 @@
 subprojects {
     apply plugin: "java"
 
-    group "lol.pyr"
-    version "2.1.0" + (System.getenv().containsKey("BUILD_ID") ? "-SNAPSHOT" : "")
+    group = "lol.pyr"
+    version = "2.1.0" + (System.getenv().containsKey("BUILD_ID") ? "-SNAPSHOT" : "")
 
     // ONLY FOR ENVIZAR'S NIXOS
-    tasks.withType(JavaCompile).configureEach {
-        options.fork = true
-        options.forkOptions.executable = '/nix/store/1cdfqckij0vk5jrqnjxafyivbf9qq1qw-zulu-ca-jdk-8.0.422/bin/javac'
-    }
-    tasks.withType(Test).configureEach {
-        executable = '/nix/store/1cdfqckij0vk5jrqnjxafyivbf9qq1qw-zulu-ca-jdk-8.0.422/bin/java'
-    }
+//    tasks.withType(JavaCompile).configureEach {
+//        options.compilerArgs += ['-Xlint:deprecation']
+//        options.fork = true
+//        options.forkOptions.executable = '/nix/store/1cdfqckij0vk5jrqnjxafyivbf9qq1qw-zulu-ca-jdk-8.0.422/bin/javac'
+//    }
+//    tasks.withType(Test).configureEach {
+//        executable = '/nix/store/1cdfqckij0vk5jrqnjxafyivbf9qq1qw-zulu-ca-jdk-8.0.422/bin/java'
+//    }
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     dependencies {
@@ -25,22 +26,22 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
         }
         maven {
-            url "https://repo.codemc.io/repository/maven-releases/"
+            url = "https://repo.codemc.io/repository/maven-releases/"
         }
         maven {
-            url "https://libraries.minecraft.net"
+            url = "https://libraries.minecraft.net"
         }
         maven {
-            url "https://repo.papermc.io/repository/maven-public/"
+            url = "https://repo.papermc.io/repository/maven-public/"
         }
         maven {
-            url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+            url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
         }
         maven {
-            url "https://repo.pyr.lol/releases"
+            url = "https://repo.pyr.lol/releases"
         }
     }
 }

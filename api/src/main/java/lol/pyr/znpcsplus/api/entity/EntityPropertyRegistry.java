@@ -61,7 +61,7 @@ public interface EntityPropertyRegistry {
      * @param <T> The type of the property value
      * @deprecated Use {@link #registerDummy(String, Object, boolean)} instead
      */
-    default <T> void registerDummy(String name, T defaultValue) {
+    @Deprecated default <T> void registerDummy(String name, T defaultValue) {
         registerDummy(name, defaultValue, true);
     }
 
