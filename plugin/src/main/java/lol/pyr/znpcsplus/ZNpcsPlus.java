@@ -44,7 +44,7 @@ import lol.pyr.znpcsplus.skin.cache.SkinCacheCleanTask;
 import lol.pyr.znpcsplus.storage.NpcStorageType;
 import lol.pyr.znpcsplus.tasks.HologramRefreshTask;
 import lol.pyr.znpcsplus.tasks.NpcProcessorTask;
-import lol.pyr.znpcsplus.tasks.ViewableHideOnLeaveListener;
+import lol.pyr.znpcsplus.tasks.ViewableCleanupListener;
 import lol.pyr.znpcsplus.updater.UpdateChecker;
 import lol.pyr.znpcsplus.updater.UpdateNotificationListener;
 import lol.pyr.znpcsplus.user.ClientPacketListener;
@@ -173,7 +173,7 @@ public class ZNpcsPlus {
         scheduler.runDelayedTimerAsync(new NpcProcessorTask(npcRegistry, propertyRegistry, userManager), 60L, 3L);
         scheduler.runDelayedTimerAsync(new HologramRefreshTask(npcRegistry), 60L, 20L);
         scheduler.runDelayedTimerAsync(new SkinCacheCleanTask(skinCache), 1200, 1200);
-        pluginManager.registerEvents(new ViewableHideOnLeaveListener(), bootstrap);
+        pluginManager.registerEvents(new ViewableCleanupListener(), bootstrap);
 
         log(ChatColor.WHITE + " * Loading data...");
         npcRegistry.reload();
@@ -266,6 +266,7 @@ public class ZNpcsPlus {
         manager.registerParser(Vector3f.class, new Vector3fParser(incorrectUsageMessage));
         manager.registerParser(String.class, new StringParser(incorrectUsageMessage));
         manager.registerParser(Vector3i.class, new Vector3iParser(incorrectUsageMessage));
+        manager.registerParser(Component.class, new ComponentParser(incorrectUsageMessage, textSerializer));
 
         // TODO: Need to find a better way to do this
         registerEnumParser(manager, NpcPose.class, incorrectUsageMessage);
