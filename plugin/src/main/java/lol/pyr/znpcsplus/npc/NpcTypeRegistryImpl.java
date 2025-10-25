@@ -407,6 +407,12 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
 
         register(builder(p, "happy_ghast", EntityTypes.HAPPY_GHAST)
                 .setHologramOffset(2));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_1_21_9)) return;
+
+        register(builder(p, "copper_golem", EntityTypes.COPPER_GOLEM)
+                .setHologramOffset(-0.995)
+                .addProperties("weathering_copper_state", "copper_golem_state"));
     }
 
     public Collection<NpcType> getAll() {
